@@ -13,11 +13,21 @@
 #include "../common/common_src.h"
 #include "../common/eventMarco.h"
 
+#define EVENT_DISPATCH_CASE(type, ...) { \
+case type: \
+emit type##_EMIT(##__VA_ARGS__); \
+}
+
 class Client : public QWidget
 {
     Q_OBJECT
 public:
     explicit Client(QWidget *parent = nullptr);
+
+signals:
+    void loginAllow(void);
+    void loginFail(void);
+
 
 private:
     QVBoxLayout *box;
@@ -29,6 +39,9 @@ private:
     QPushButton *loginButton;
 
     QTcpSocket *socket;
+
+private:
+    void eventDispatch(Message message);
 
 public:
     QByteArray sendLoginMessage(QString userName, QString passWord);

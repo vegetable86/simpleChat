@@ -19,6 +19,9 @@ public:
     loginRequest();
     loginRequest(Message message);
 
+public:
+    bool allowLogin;
+
 private:
     User getUser(QByteArray body);
 };

@@ -14,16 +14,22 @@ CONFIG += c++17
 SOURCES += \
     ../common/common_src.cpp \
     client.cpp \
+    loginfail.cpp \
+    loginsuccess.cpp \
     main.cpp
 
 HEADERS += \
     ../common/Protocol.h \
     ../common/common_src.h \
     ../common/eventMarco.h \
-    client.h
+    client.h \
+    loginfail.h \
+    loginsuccess.h
 
 
-FORMS +=
+FORMS += \
+    loginfail.ui \
+    loginsuccess.ui
 
 # include(../common/common.pro)
 

@@ -34,12 +34,19 @@ void Server::handleNewConnect(QTcpServer *server){
         QByteArray data = client->readAll();
         Message message = reStreamMessage(data);
         qDebug() << "解析message";
-        eventDispatch(message);
+        if(eventDispatch(message)){
+        // if(1){
+            client->write(streamMessage({MessageType::MSG_LOGIN_RESP_ALLOW, 0, "", "", QDateTime::currentMSecsSinceEpoch()}, nullptr));
+        }
+        else{
+            client->write(streamMessage({MessageType::MSG_LOGIN_RESP_REJECT, 0, "", "", QDateTime::currentMSecsSinceEpoch()}, nullptr));
+        }
     });
 }
 
-void Server::eventDispatch(Message message){
+bool Server::eventDispatch(Message message){
     switch(message.header.type){
         EVENT_DISPATCH_CASE(MSG_LOGIN_REQ, message);
     }
+    return false;
 }

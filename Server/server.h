@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QCoreApplication>
 #include <QTcpSocket>
+#include <QDateTime>
 
 #include "../common/common_src.h"
 #include "../common/Protocol.h"
@@ -15,7 +16,7 @@
 #define EVENT_DISPATCH_CASE(type, m) { \
 case type: \
 type##_Handler handler(m); \
-break; \
+return handler.allowLogin; \
 }
 
 class Server : public QWidget
@@ -27,7 +28,7 @@ public:
 private:
     QTcpServer *server;
 
-    void eventDispatch(Message message);
+    bool eventDispatch(Message message);
 
 private slots:
     void handleNewConnect(QTcpServer *server);
