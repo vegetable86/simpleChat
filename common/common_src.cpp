@@ -1,5 +1,7 @@
 #include "common_src.h"
 
+#include <QDebug>
+
 // 序列化消息
 QByteArray streamMessage(const MessageHeader &header, const QByteArray &body){
 
@@ -31,7 +33,8 @@ Message reStreamMessage(QByteArray &data){
         >> header.receiver
         >> header.timestamp;
     // 消息体
-    QByteArray body = data.mid(sizeof(header));
+    qint32 offset = stream.device()->pos();
+    QByteArray body = data.mid(offset);
     return {header, body};
 }
 

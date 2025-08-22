@@ -8,11 +8,14 @@
 
 #include "../common/common_src.h"
 #include "../common/Protocol.h"
+#include "../common/eventMarco.h"
 
-#define EVENT_DISPATCH_CASE(type) { \
-    case type: \
-        type##_Handler handler(message); \
-        break; \
+#include "loginrequest.h"
+
+#define EVENT_DISPATCH_CASE(type, m) { \
+case type: \
+type##_Handler handler(m); \
+break; \
 }
 
 class Server : public QWidget
@@ -24,7 +27,6 @@ public:
 private:
     QTcpServer *server;
 
-    void handleClientDate(QTcpSocket *client);
     void eventDispatch(Message message);
 
 private slots:

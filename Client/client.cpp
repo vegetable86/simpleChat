@@ -45,21 +45,26 @@ Client::Client(QWidget *parent)
         // 需要构造一个消息头
         // MessageHeader
         // 登录
+        qDebug() << "点击登录，发送请求";
         socket->write(sendLoginMessage(userName->toPlainText(), passWord->toPlainText()));
     });
 }
 
-QByteArray sendLoginMessage(QString userName, QString passWord){
+QByteArray Client::sendLoginMessage(QString userName, QString passWord){
     // 账号密码写入登录的消息体
+    // 构造出的结构: 账号长度(2字节) | 账号 | 密码长度(2字节) | 密码
     QByteArray body;
-    body.append(userName);
-    body.append(passWord);
+    QDataStream bodyStream(&body, QIODevice::WriteOnly);
+    bodyStream << (qint16)userName.size()
+               << userName
+               << (qint16)passWord.size()
+               << passWord;
 
     MessageHeader messageHeader = {MessageType::MSG_LOGIN_REQ,
-                                    body.size(),
-                                    NotNeed::NOT_NEED_SENDER,
-                                    NotNeed::NOT_NEED_RECEIVER,
-                                    QDateTime::currentSecsSinceEpoch()};
+                                   (quint32)body.size(),
+                                   "",
+                                   "",
+                                   QDateTime::currentSecsSinceEpoch()};
 
     return streamMessage(messageHeader, body);
 }

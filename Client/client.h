@@ -11,6 +11,7 @@
 
 #include "../common/Protocol.h"
 #include "../common/common_src.h"
+#include "../common/eventMarco.h"
 
 class Client : public QWidget
 {

@@ -1,11 +1,10 @@
 TEMPLATE = subdirs
 
-CONFIG+=ordered
-
 SUBDIRS += \
+    common \
     Client \
-    Server \
-    common
+    Server
+
 
 Client.depends = common
 Server.depends = common
