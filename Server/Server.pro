@@ -17,6 +17,7 @@ SOURCES += \
     ../common/common_src.cpp \
     loginrequest.cpp \
     main.cpp \
+    registerrequest.cpp \
     server.cpp
 
 HEADERS += \
@@ -24,6 +25,7 @@ HEADERS += \
     ../common/common_src.h \
     ../common/eventMarco.h \
     loginrequest.h \
+    registerrequest.h \
     server.h
 
 FORMS +=

@@ -8,10 +8,13 @@
 
 // 映射到登录request类中
 #define MSG_LOGIN_REQ_Handler loginRequest
+#define MSG_REGISTER_REQ_Handler registerRequest
 
 
 // Client用:
 #define MSG_LOGIN_RESP_ALLOW_EMIT loginAllow
-#define MSG_LOGIN_RESP_REJECT_EMIT loginFail
+#define MSG_LOGIN_RESP_REJECT_EMIT loginReject
+#define MSG_REGISTER_RESP_ALLOW_EMIT registerSuccess
+#define MSG_REGISTER_RESP_REJECT_EMIT registerFail
 
 #endif // EVENTMARCO_H

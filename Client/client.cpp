@@ -1,37 +1,64 @@
 #include "client.h"
 
+// 可点击Label
+ClickedLabel::ClickedLabel(QWidget *parent) : QLabel{parent}{
+
+}
+
+void ClickedLabel::mousePressEvent(QMouseEvent *mouseEvent){
+    if(mouseEvent->button() == Qt::LeftButton){
+        emit clicked();
+    }
+}
+
+
+// 客户端开始界面
 Client::Client(QWidget *parent)
     : QWidget{parent}
 {
-    box = new QVBoxLayout(this);
+     // socket链接
+    socket = new QTcpSocket(this);
+    qDebug() << "连接中...";
+    QHostAddress address("127.0.0.1");
+    socket->connectToHost(address, 8080);
+
+    //界面初始化
+    loginSuccessWindow = new loginSuccess;
+    loginFailWindow = new loginFail;
+    registerWindows = new registerWindow(nullptr, this->socket);
+
+    mainBox = new QVBoxLayout(this);
+    box = new QVBoxLayout;
+    registerAndLogin = new QHBoxLayout;
+
+    // Client主页面的控件
     userNameBlock = new QLabel("用户名");
     userName = new QTextEdit;
     passWordBlock = new QLabel("密码");
     passWord = new QTextEdit;
     loginButton = new QPushButton;
     socketConnectSuccessSign = new QLabel("服务器连接中...");
+    registerUser = new ClickedLabel;
 
-
-    userName->setFixedSize(200, 27);
-    passWord->setFixedSize(200, 27);
+    userName->setFixedSize(300, 27);
+    passWord->setFixedSize(300, 27);
     loginButton->setFixedSize(200, 27);
     loginButton->setText("登录");
     loginButton->setEnabled(false);
+    registerUser->setText("点击进行注册");
 
     box->addWidget(userNameBlock);
     box->addWidget(userName);
     box->addWidget(passWordBlock);
     box->addWidget(passWord);
-    box->addWidget(loginButton);
-    box->addWidget(socketConnectSuccessSign);
+    registerAndLogin->addWidget(registerUser);
+    registerAndLogin->addWidget(loginButton);
+
+    mainBox->addLayout(box);
+    mainBox->addLayout(registerAndLogin);
+    mainBox->addWidget(socketConnectSuccessSign);
 
 
-    socket = new QTcpSocket;
-
-
-    qDebug() << "连接中...";
-    QHostAddress address("127.0.0.1");
-    socket->connectToHost(address, 8080);
 
 
     // 成功连接到服务器之后会出现连接成功的字样
@@ -58,13 +85,41 @@ Client::Client(QWidget *parent)
 
         eventDispatch(message);
     });
+
+    // 发送登录成功信号，并跳转出登录成功界面
+    QObject::connect(this, &Client::loginAllow, loginSuccessWindow, [&](){
+        loginSuccessWindow->show();
+    });
+
+    // 发送登录失败信号，并跳转出登录失败界面
+    QObject::connect(this, &Client::loginReject, loginFailWindow, [&](){
+        loginFailWindow->show();
+    });
+
+    // 点击注册，跳转到注册页面
+    QObject::connect(this->registerUser, &ClickedLabel::clicked, registerWindows, [&](){
+        this->hide();
+        registerWindows->show();
+    });
+
+    // 注册返回按钮，返回登录界面
+    QObject::connect(registerWindows, &registerWindow::pushBackButton, this, [&](){
+        registerWindows->hide();
+        this->show();
+    });
+
+    //
 }
 
 
 void Client::eventDispatch(Message message){
     switch(message.header.type){
+        // 登录
         EVENT_DISPATCH_CASE(MSG_LOGIN_RESP_ALLOW);
         EVENT_DISPATCH_CASE(MSG_LOGIN_RESP_REJECT);
+        // 注册
+        EVENT_DISPATCH_CASE(MSG_REGISTER_RESP_ALLOW);
+        EVENT_DISPATCH_CASE(MSG_REGISTER_RESP_REJECT);
     }
 }
 

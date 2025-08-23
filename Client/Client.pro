@@ -16,7 +16,8 @@ SOURCES += \
     client.cpp \
     loginfail.cpp \
     loginsuccess.cpp \
-    main.cpp
+    main.cpp \
+    registerwindow.cpp
 
 HEADERS += \
     ../common/Protocol.h \
@@ -24,12 +25,14 @@ HEADERS += \
     ../common/eventMarco.h \
     client.h \
     loginfail.h \
-    loginsuccess.h
+    loginsuccess.h \
+    registerwindow.h
 
 
 FORMS += \
     loginfail.ui \
-    loginsuccess.ui
+    loginsuccess.ui \
+    registerwindow.ui
 
 # include(../common/common.pro)
 

@@ -12,11 +12,12 @@
 #include "../common/eventMarco.h"
 
 #include "loginrequest.h"
+#include "registerrequest.h"
 
-#define EVENT_DISPATCH_CASE(type, m) { \
+#define EVENT_DISPATCH_CASE(type, ...) { \
 case type: \
-type##_Handler handler(m); \
-return handler.allowLogin; \
+type##_Handler handler(__VA_ARGS__); \
+return; \
 }
 
 class Server : public QWidget
@@ -28,11 +29,14 @@ public:
 private:
     QTcpServer *server;
 
-    bool eventDispatch(Message message);
+    void eventDispatch(Message message, QTcpSocket *client);
 
 private slots:
     void handleNewConnect(QTcpServer *server);
 
+    //标记各种状态和信息
+public:
+    bool allowLogin;
 };
 
 #endif // SERVER_H

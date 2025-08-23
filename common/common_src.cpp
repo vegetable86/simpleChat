@@ -38,3 +38,23 @@ Message reStreamMessage(QByteArray &data){
     return {header, body};
 }
 
+// 登录请求发送的消息体中解析出用户的账号和密码
+// 格式为  账号长度 | 账号 | 密码长度 | 密码
+User getUser(QByteArray body){
+    qint16 userNameLength, passWordLength;
+    QString userName, passWord;
+
+    QDataStream stream(&body, QIODevice::ReadOnly);
+
+    // 账号
+    stream >> userNameLength;
+    userName.resize(userNameLength);
+    stream >> userName;
+
+    // 密码
+    stream >> passWordLength;
+    passWord.resize(passWordLength);
+    stream >> passWord;
+    return {userName, passWord};
+}
+

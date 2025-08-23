@@ -16,6 +16,9 @@ enum MessageType {
     MSG_LOGIN_REQ,        // 登录请求
     MSG_LOGIN_RESP_ALLOW, // 允许登录响应
     MSG_LOGIN_RESP_REJECT,// 拒绝登录请求
+    MSG_REGISTER_REQ,	  // 注册用户请求
+    MSG_REGISTER_RESP_ALLOW, //	允许注册用户请求
+    MSG_REGISTER_RESP_REJECT,// 拒绝注册用户请求
     MSG_TEXT,             // 文本消息
     MSG_FILE_REQ,         // 文件传输请求
     MSG_FILE_DATA,        // 文件数据块
@@ -34,6 +37,11 @@ enum NotNeed{
 struct Message {
     MessageHeader header;
     QByteArray body;
+};
+
+struct User{
+    QString userName;
+    QString passWord;
 };
 
 #endif // PROTOCOL_H

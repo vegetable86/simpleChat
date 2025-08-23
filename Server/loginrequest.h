@@ -7,23 +7,20 @@
 #include <QIODevice>
 
 #include "../common/Protocol.h"
+#include "../common/common_src.h"
 
-struct User{
-    QString userName;
-    QString passWord;
-};
+#include "server.h"
+
+class Server;
 
 class loginRequest
 {
 public:
     loginRequest();
-    loginRequest(Message message);
+    loginRequest(Message &message, Server *server, QTcpSocket *client);
 
 public:
-    bool allowLogin;
 
-private:
-    User getUser(QByteArray body);
 };
 
 #endif // LOGINREQUEST_H

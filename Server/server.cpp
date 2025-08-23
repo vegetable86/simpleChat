@@ -33,20 +33,16 @@ void Server::handleNewConnect(QTcpServer *server){
     QObject::connect(client, &QTcpSocket::readyRead, this, [=](){
         QByteArray data = client->readAll();
         Message message = reStreamMessage(data);
-        qDebug() << "解析message";
-        if(eventDispatch(message)){
-        // if(1){
-            client->write(streamMessage({MessageType::MSG_LOGIN_RESP_ALLOW, 0, "", "", QDateTime::currentMSecsSinceEpoch()}, nullptr));
-        }
-        else{
-            client->write(streamMessage({MessageType::MSG_LOGIN_RESP_REJECT, 0, "", "", QDateTime::currentMSecsSinceEpoch()}, nullptr));
-        }
+        qDebug() << "解析message:\n";
+        eventDispatch(message, client);
     });
 }
 
-bool Server::eventDispatch(Message message){
+void Server::eventDispatch(Message message, QTcpSocket *client){
     switch(message.header.type){
-        EVENT_DISPATCH_CASE(MSG_LOGIN_REQ, message);
-    }
-    return false;
+        // 按照宏拼接，最终生成type_Handler
+        // 随后在common/eventMarco.h中进一步映射
+        EVENT_DISPATCH_CASE(MSG_LOGIN_REQ, message, this, client);
+        EVENT_DISPATCH_CASE(MSG_REGISTER_REQ, message, this, client);
+    };
 }
