@@ -67,7 +67,7 @@ Client::Client(QWidget *parent)
         loginButton->setEnabled(true);
     });
 
-    // 点击按钮之后发送一个登录请求到服务器
+    // 点击登录按钮之后发送一个登录请求到服务器
     QObject::connect(loginButton, &QPushButton::clicked, this, [=](){
         // 需要构造一个消息头
         // MessageHeader
@@ -96,7 +96,7 @@ Client::Client(QWidget *parent)
         loginFailWindow->show();
     });
 
-    // 点击注册，跳转到注册页面
+    // 点击注册label，跳转到注册页面
     QObject::connect(this->registerUser, &ClickedLabel::clicked, registerWindows, [&](){
         this->hide();
         registerWindows->show();
@@ -108,7 +108,15 @@ Client::Client(QWidget *parent)
         this->show();
     });
 
-    //
+    // 注册成功之后的逻辑
+    QObject::connect(this, &Client::registerSuccess, registerWindows, [&](){
+        registerWindows->successRegister();
+    });
+
+    // 注册失败
+    QObject::connect(this, &Client::registerFail, registerWindows, [&](){
+        registerWindows->failRegister();
+    });
 }
 
 
@@ -127,7 +135,7 @@ QByteArray Client::sendLoginMessage(QString userName, QString passWord){
     // 账号密码写入登录的消息体
     // 构造出的结构: 账号长度(2字节) | 账号 | 密码长度(2字节) | 密码
     QByteArray body;
-    QDataStream bodyStream(&body, QIODevice::WriteOnly);
+    QDataStream bodyStream(&body, QIODevice::ReadWrite);
     bodyStream << (qint16)userName.size()
                << userName
                << (qint16)passWord.size()

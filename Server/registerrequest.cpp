@@ -3,14 +3,14 @@
 registerRequest::registerRequest() {}
 
 registerRequest::registerRequest(Message &message, Server *server, QTcpSocket *client) {
-    User need = getUser(message.body);
+    Q_UNUSED(server);
 
+    User need = getUser(message.body);
     qDebug() << "registerRequest(8) 接收到注册请求";
 
     QSqlQuery query;
-    query.prepare("SELECT * FROM users WHERE username = :username AND password_hash = :password");
+    query.prepare("SELECT * FROM users WHERE username = :username");
     query.bindValue(":username", need.userName);
-    query.bindValue(":password", need.passWord);
     query.exec();
 
     qDebug() << "注册账号查询中...  " << need.userName;

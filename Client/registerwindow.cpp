@@ -9,16 +9,17 @@ registerWindow::registerWindow(QWidget *parent)
 }
 
 
-registerWindow::registerWindow(QWidget *parent, QTcpSocket *socket)
+registerWindow::registerWindow(QWidget *parent, QTcpSocket *clientSocket)
     : QWidget(parent)
-    , socket(socket)
+    , socket(clientSocket)
     , ui(new Ui::registerWindow)
 {
     ui->setupUi(this);
 
+    // 点击注册按钮之后
     // 向服务器发送注册请求
     QObject::connect(this->ui->registeButton, &QPushButton::clicked, this, [&](){
-        if(socket == nullptr || socket->state() == QAbstractSocket::UnconnectedState){
+        if(this->socket == nullptr || this->socket->state() == QAbstractSocket::UnconnectedState){
             this->ui->tipsLabel->setText("网络未连接");
             return;
         }
@@ -47,6 +48,16 @@ registerWindow::registerWindow(QWidget *parent, QTcpSocket *socket)
         emit pushBackButton();
     });
 
+}
+
+
+void registerWindow::successRegister(void){
+    this->ui->tipsLabel->setText("注册成功, 点击返回，即可登录");
+}
+
+
+void registerWindow::failRegister(void){
+    this->ui->tipsLabel->setText("注册失败，用户已存在");
 }
 
 registerWindow::~registerWindow()

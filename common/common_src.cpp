@@ -3,11 +3,11 @@
 #include <QDebug>
 
 // 序列化消息
-QByteArray streamMessage(const MessageHeader &header, const QByteArray &body){
+QByteArray streamMessage(MessageHeader header, QByteArray body){
     // 最终的消息包
     QByteArray packet;
     // 构造一个二进制的数据流
-    QDataStream stream(&packet, QIODevice::WriteOnly);
+    QDataStream stream(&packet, QIODevice::ReadWrite);
     stream << header.type
            << header.length
            << header.sender
@@ -21,9 +21,8 @@ QByteArray streamMessage(const MessageHeader &header, const QByteArray &body){
 }
 
 
-Message reStreamMessage(QByteArray &data){
-    QDataStream stream(&data, QIODevice::ReadOnly);
-
+Message reStreamMessage(QByteArray data){
+    QDataStream stream(&data, QIODevice::ReadWrite);
     // 反序列化
     // 消息头
     MessageHeader header;
@@ -44,7 +43,7 @@ User getUser(QByteArray body){
     qint16 userNameLength, passWordLength;
     QString userName, passWord;
 
-    QDataStream stream(&body, QIODevice::ReadOnly);
+    QDataStream stream(&body, QIODevice::ReadWrite);
 
     // 账号
     stream >> userNameLength;
