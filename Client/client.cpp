@@ -16,7 +16,7 @@ void ClickedLabel::mousePressEvent(QMouseEvent *mouseEvent){
 Client::Client(QWidget *parent)
     : QWidget{parent}
 {
-     // socket链接
+    // socket链接
     socket = new QTcpSocket(this);
     qDebug() << "连接中...";
     QHostAddress address("127.0.0.1");
@@ -26,6 +26,10 @@ Client::Client(QWidget *parent)
     loginSuccessWindow = new loginSuccess;
     loginFailWindow = new loginFail;
     registerWindows = new registerWindow(nullptr, this->socket);
+
+    // 主页面
+    userMainQml = new QQmlApplicationEngine;
+    friendList = new friendListDisplay(userMainQml);
 
     mainBox = new QVBoxLayout(this);
     box = new QVBoxLayout;
@@ -79,11 +83,11 @@ Client::Client(QWidget *parent)
     // 客户端接收到消息
     QObject::connect(socket, &QTcpSocket::readyRead, this, [=](){
         QByteArray data = socket->readAll();
-        Message message = reStreamMessage(data);
+        message = reStreamMessage(data);
 
-        qDebug() << "客户端解析登录响应信息";
+        qDebug() << "客户端解析服务端响应信息";
 
-        eventDispatch(message);
+        eventDispatch();
     });
 
     // 发送登录成功信号，并跳转出登录成功界面
@@ -93,10 +97,10 @@ Client::Client(QWidget *parent)
 
     // 当登录成功界面隐藏的时候，调用用户主页面
     QObject::connect(loginSuccessWindow, &loginSuccess::loginSuccessEmit, this, [&](){
-        userMainQml = new QQmlApplicationEngine(this);
-        userMainQml->load(QUrl(QStringLiteral("qrc:/userMain.qml")));
         this->hide();
-        // userMainQml->show();
+        infoUnion info = {userName->toPlainText()};
+        userMain = new userMainWindow(socket, &info, userMainQml);
+        userMainQml->load(QUrl(QStringLiteral("qrc:/userMain.qml")));
     });
 
     // 发送登录失败信号，并跳转出登录失败界面
@@ -125,17 +129,27 @@ Client::Client(QWidget *parent)
     QObject::connect(this, &Client::registerFail, registerWindows, [&](){
         registerWindows->failRegister();
     });
+
+    // 好友列表展示
+    QObject::connect(this, &Client::friendListDisplayEmit, this, [&](){
+        // 将数据加载进qml中
+        friendList->loadFriendList(message, userMainQml);
+    });
 }
 
 
-void Client::eventDispatch(Message message){
-    switch(message.header.type){
+void Client::eventDispatch(void){
+    switch(this->message.header.type){
         // 登录
-        EVENT_DISPATCH_CASE(MSG_LOGIN_RESP_ALLOW);
-        EVENT_DISPATCH_CASE(MSG_LOGIN_RESP_REJECT);
+        Client_EVENT_DISPATCH_CASE(MSG_LOGIN_RESP_ALLOW);
+        Client_EVENT_DISPATCH_CASE(MSG_LOGIN_RESP_REJECT);
         // 注册
-        EVENT_DISPATCH_CASE(MSG_REGISTER_RESP_ALLOW);
-        EVENT_DISPATCH_CASE(MSG_REGISTER_RESP_REJECT);
+        Client_EVENT_DISPATCH_CASE(MSG_REGISTER_RESP_ALLOW);
+        Client_EVENT_DISPATCH_CASE(MSG_REGISTER_RESP_REJECT);
+
+        // 接收到好友列表
+        Client_EVENT_DISPATCH_CASE(MSG_FRIEND_LIST_RESP);
+
     }
 }
 

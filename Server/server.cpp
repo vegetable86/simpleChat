@@ -42,7 +42,10 @@ void Server::eventDispatch(Message message, QTcpSocket *client){
     switch(message.header.type){
         // 按照宏拼接，最终生成type_Handler
         // 随后在common/eventMarco.h中进一步映射
-        EVENT_DISPATCH_CASE(MSG_LOGIN_REQ, message, this, client);
-        EVENT_DISPATCH_CASE(MSG_REGISTER_REQ, message, this, client);
+        // 登录处理
+        SERVER_EVENT_DISPATCH_CASE(MSG_LOGIN_REQ, message, this, client);
+        SERVER_EVENT_DISPATCH_CASE(MSG_REGISTER_REQ, message, this, client);
+        // 朋友列表处理
+        SERVER_EVENT_DISPATCH_CASE(MSG_FRIEND_LIST_REQ, message, this, client);
     };
 }

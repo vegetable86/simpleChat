@@ -21,13 +21,9 @@
 #include "loginsuccess.h"
 #include "loginfail.h"
 #include "registerwindow.h"
+#include "usermainwindow.h"
+#include "friendlistdisplay.h"
 
-// 事件分发宏
-#define EVENT_DISPATCH_CASE(type, ...) { \
-case type: \
-emit type##_EMIT(__VA_ARGS__); \
-return ; \
-}
 
 // 可点击Label
 class ClickedLabel : public QLabel
@@ -61,6 +57,8 @@ signals:
     void registerSuccess(void);
     // 注册用户失败
     void registerFail(void);
+    // 好友列表
+    void friendListDisplayEmit(void);
 
 
 private:
@@ -87,13 +85,19 @@ private:
     loginSuccess *loginSuccessWindow;
     loginFail *loginFailWindow;
     registerWindow *registerWindows;
+    userMainWindow *userMain;
+    friendListDisplay *friendList;
+
+private:
+    // 传递数据的公用message容器
+    Message message;
 
 // qml界面，登录成功后调用
 private:
     QQmlApplicationEngine *userMainQml;
 
 private:
-    void eventDispatch(Message message);
+    void eventDispatch(void);
 
 public:
     QByteArray sendLoginMessage(QString userName, QString passWord);

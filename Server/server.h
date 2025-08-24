@@ -13,12 +13,8 @@
 
 #include "loginrequest.h"
 #include "registerrequest.h"
+#include "friendlistrequest.h"
 
-#define EVENT_DISPATCH_CASE(type, ...) { \
-case type: \
-type##_Handler handler(__VA_ARGS__); \
-return; \
-}
 
 class Server : public QWidget
 {

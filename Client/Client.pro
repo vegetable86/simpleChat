@@ -15,19 +15,23 @@ CONFIG += c++17
 SOURCES += \
     ../common/common_src.cpp \
     client.cpp \
+    friendlistdisplay.cpp \
     loginfail.cpp \
     loginsuccess.cpp \
     main.cpp \
-    registerwindow.cpp
+    registerwindow.cpp \
+    usermainwindow.cpp
 
 HEADERS += \
     ../common/Protocol.h \
     ../common/common_src.h \
     ../common/eventMarco.h \
     client.h \
+    friendlistdisplay.h \
     loginfail.h \
     loginsuccess.h \
-    registerwindow.h
+    registerwindow.h \
+    usermainwindow.h
 
 
 FORMS += \

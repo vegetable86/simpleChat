@@ -13,9 +13,12 @@ struct MessageHeader {
 };
 
 enum MessageType {
+    // 登录
     MSG_LOGIN_REQ,        // 登录请求
     MSG_LOGIN_RESP_ALLOW, // 允许登录响应
     MSG_LOGIN_RESP_REJECT,// 拒绝登录请求
+
+    // 注册
     MSG_REGISTER_REQ,	  // 注册用户请求
     MSG_REGISTER_RESP_ALLOW, //	允许注册用户请求
     MSG_REGISTER_RESP_REJECT,// 拒绝注册用户请求
@@ -24,8 +27,11 @@ enum MessageType {
     MSG_FILE_DATA,        // 文件数据块
     MSG_FRIEND_REQ,       // 添加好友请求
     MSG_FRIEND_RESP,      // 添加好友响应
+
+    // 获取好友列表
     MSG_FRIEND_LIST_REQ,  // 获取好友列表
     MSG_FRIEND_LIST_RESP, // 好友列表响应
+
     MSG_STATUS_UPDATE     // 在线状态更新
 };
 
@@ -42,6 +48,13 @@ struct Message {
 struct User{
     QString userName;
     QString passWord;
+};
+
+// 信息大礼包
+struct infoUnion{
+    QString userName;
+
+    // ...
 };
 
 #endif // PROTOCOL_H

@@ -15,6 +15,7 @@ CONFIG += c++17
 
 SOURCES += \
     ../common/common_src.cpp \
+    friendlistrequest.cpp \
     loginrequest.cpp \
     main.cpp \
     registerrequest.cpp \
@@ -24,6 +25,7 @@ HEADERS += \
     ../common/Protocol.h \
     ../common/common_src.h \
     ../common/eventMarco.h \
+    friendlistrequest.h \
     loginrequest.h \
     registerrequest.h \
     server.h
