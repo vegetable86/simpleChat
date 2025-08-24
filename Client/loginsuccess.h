@@ -13,6 +13,9 @@ class loginSuccess : public QWidget
 {
     Q_OBJECT
 
+signals:
+    void loginSuccessEmit(void);
+
 public:
     explicit loginSuccess(QWidget *parent = nullptr);
     ~loginSuccess();

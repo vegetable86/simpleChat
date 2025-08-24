@@ -91,6 +91,14 @@ Client::Client(QWidget *parent)
         loginSuccessWindow->show();
     });
 
+    // 当登录成功界面隐藏的时候，调用用户主页面
+    QObject::connect(loginSuccessWindow, &loginSuccess::loginSuccessEmit, this, [&](){
+        userMainQml = new QQmlApplicationEngine(this);
+        userMainQml->load(QUrl(QStringLiteral("qrc:/userMain.qml")));
+        this->hide();
+        // userMainQml->show();
+    });
+
     // 发送登录失败信号，并跳转出登录失败界面
     QObject::connect(this, &Client::loginReject, loginFailWindow, [&](){
         loginFailWindow->show();

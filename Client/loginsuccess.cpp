@@ -11,6 +11,7 @@ loginSuccess::loginSuccess(QWidget *parent)
         // setAttribute(Qt::WA_DeleteOnClose);
         // close();
         hide();
+        emit loginSuccessEmit();
     });
 }
 

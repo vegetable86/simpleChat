@@ -10,6 +10,9 @@
 #include <QDateTime>
 #include <QHBoxLayout>
 #include <QMouseEvent>
+#include <QQuickView>
+#include <QStringLiteral>
+#include <QQmlApplicationEngine>
 
 #include "../common/Protocol.h"
 #include "../common/common_src.h"
@@ -85,6 +88,9 @@ private:
     loginFail *loginFailWindow;
     registerWindow *registerWindows;
 
+// qml界面，登录成功后调用
+private:
+    QQmlApplicationEngine *userMainQml;
 
 private:
     void eventDispatch(Message message);

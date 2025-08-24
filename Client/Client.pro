@@ -2,6 +2,7 @@ TEMPLATE = app
 
 QT       += core gui
 QT	 += network
+QT	 += quick qml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -47,3 +48,9 @@ else:unix: LIBS += -L$$OUT_PWD/../common/ -lcommon
 
 INCLUDEPATH += $$PWD/../common
 DEPENDPATH += $$PWD/../common
+
+DISTFILES += \
+    userMain.qml
+
+RESOURCES += \
+    resources.qrc
