@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>userMain.qml</file>
+        <file>addIcon.png</file>
+        <file>searchIcon.png</file>
     </qresource>
 </RCC>
